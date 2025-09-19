@@ -1,0 +1,91 @@
+{
+  "components": [
+    {
+      "label": "Applicant Name",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_08g1cb5",
+        "columns": null
+      },
+      "id": "Field_13hrsb0",
+      "key": "applicantName",
+      "readonly": "on"
+    },
+    {
+      "label": "Request Id",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_00e6ydf",
+        "columns": null
+      },
+      "id": "Field_0ighh5v",
+      "key": "requestId",
+      "readonly": true
+    },
+    {
+      "label": "Wage",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0t9u4fq",
+        "columns": null
+      },
+      "id": "Field_1mkwwof",
+      "key": "wage",
+      "readonly": false
+    },
+    {
+      "label": "Date",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0t9u4fq",
+        "columns": null
+      },
+      "id": "Field_1mklo1w",
+      "key": "date",
+      "readonly": "on"
+    },
+    {
+      "label": "Comments",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_0mec3j8",
+        "columns": null
+      },
+      "id": "Field_1chh0ce",
+      "key": "comment",
+      "validate": {}
+    },
+    {
+      "label": "Comment Visibility",
+      "values": [
+        {
+          "label": "Public",
+          "value": "public"
+        },
+        {
+          "label": "Private",
+          "value": "Private"
+        }
+      ],
+      "type": "radio",
+      "layout": {
+        "row": "Row_1xjq7z2",
+        "columns": null
+      },
+      "id": "Field_0afjw6q",
+      "key": "commentVisibility",
+      "validate": {
+        "required": true
+      }
+    }
+  ],
+  "type": "default",
+  "id": "AdminUpdate",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.7.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.37.0"
+  },
+  "schemaVersion": 18
+}

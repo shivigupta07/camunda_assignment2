@@ -1,0 +1,102 @@
+{
+  "components": [
+    {
+      "label": "Applicant Name",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_11jzjwq",
+        "columns": null
+      },
+      "id": "Field_0anzcuo",
+      "key": "applicantName",
+      "readonly": "on"
+    },
+    {
+      "label": "Request Id",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1m5htm9",
+        "columns": null
+      },
+      "id": "Field_01o2qlh",
+      "key": "requestId",
+      "readonly": "on"
+    },
+    {
+      "label": "Wage",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1m5htm9",
+        "columns": null
+      },
+      "id": "Field_0e7ehgo",
+      "key": "wage",
+      "readonly": true
+    },
+    {
+      "label": "Date",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0bi3mmc",
+        "columns": null
+      },
+      "id": "Field_0whpdw1",
+      "key": "date",
+      "readonly": "on"
+    },
+    {
+      "label": "Indicator",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0bi3mmc",
+        "columns": null
+      },
+      "id": "Field_1iyg3vx",
+      "key": "indicator",
+      "readonly": "on"
+    },
+    {
+      "label": "Comment",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0wccktw",
+        "columns": null
+      },
+      "id": "Field_1qlz788",
+      "key": "comment",
+      "readonly": "on"
+    },
+    {
+      "label": "Decision",
+      "values": [
+        {
+          "label": "Approve",
+          "value": "approve"
+        },
+        {
+          "label": "Return",
+          "value": "return"
+        }
+      ],
+      "type": "radio",
+      "layout": {
+        "row": "Row_0d5w97w",
+        "columns": null
+      },
+      "id": "Field_1u1b81v",
+      "key": "financeDecision",
+      "validate": {
+        "required": true
+      }
+    }
+  ],
+  "type": "default",
+  "id": "Financial_Controller_Form",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.7.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.37.0"
+  },
+  "schemaVersion": 18
+}

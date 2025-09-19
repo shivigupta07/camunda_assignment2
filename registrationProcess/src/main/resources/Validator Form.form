@@ -1,0 +1,45 @@
+{
+  "components": [
+    {
+      "label": "Validator Action",
+      "values": [
+        {
+          "label": "Approve",
+          "value": "approve"
+        },
+        {
+          "label": "Reject",
+          "value": "reject"
+        },
+        {
+          "label": "Request Clarification",
+          "value": "requestClarification"
+        },
+        {
+          "label": "Raise inspection",
+          "value": "raiseInspection"
+        }
+      ],
+      "type": "radio",
+      "layout": {
+        "row": "Row_1g0et4s",
+        "columns": null
+      },
+      "id": "Field_1chq4qd",
+      "key": "validatorAction",
+      "validate": {
+        "required": true
+      }
+    }
+  ],
+  "type": "default",
+  "id": "validator_form",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.7.0",
+  "versionTag": "validator_form",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.37.0"
+  },
+  "schemaVersion": 18
+}
