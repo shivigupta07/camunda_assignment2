@@ -32,5 +32,3 @@ build/
 ### VS Code ###
 .vscode/
 
-# Spring Boot specific
-src/main/resources/application.yml

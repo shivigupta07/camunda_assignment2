@@ -1,0 +1,32 @@
+camunda:
+  operate:
+    url: http://localhost:8081
+    taskapi:
+        url: http://localhost:8082/v1/tasks/
+    identity:
+        token-url: http://localhost:18080/auth/realms/camunda-platform/protocol/openid-connect/token
+        client-id: employee-travel-allowance
+        client-secret: ocRlpPwbp2qyG2sSN9JgrEMnzpPJNFwr
+ 
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+
+spring:
+  activemq:
+    broker-url: tcp://localhost:61616
+    user: admin
+    password: admin
+    packages:
+      trust-all: true
+
+app:
+  jms: 
+    request-queue: inspectionQueue
+    response-queue: inspectionResponseQueue
+
+zeebe:
+  client:
+    broker:
+      gateway-address: 127.0.0.1:26500
