@@ -1,0 +1,50 @@
+{
+  "components": [
+    {
+      "label": "Decision",
+      "values": [
+        {
+          "label": "Class 1",
+          "value": "Class 1"
+        },
+        {
+          "label": "Class 2",
+          "value": "Class 2"
+        },
+        {
+          "label": "Class 3",
+          "value": "Class 3"
+        }
+      ],
+      "type": "radio",
+      "layout": {
+        "row": "Row_0dojuqt",
+        "columns": null
+      },
+      "id": "Field_0tsz01z",
+      "key": "financeDecision",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Comment",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_1vibyg2",
+        "columns": null
+      },
+      "id": "Field_01yrbn2",
+      "key": "textarea_abrn2o"
+    }
+  ],
+  "type": "default",
+  "id": "FinanceDecision",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.7.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.39.0"
+  },
+  "schemaVersion": 19
+}

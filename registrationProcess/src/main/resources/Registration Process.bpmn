@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1065p2u" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.37.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.7.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1065p2u" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.39.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.7.0">
   <bpmn:process id="registration_process" name="Registration Process" isExecutable="true">
     <bpmn:exclusiveGateway id="gw_missingWage" name="Is wage missing?">
       <bpmn:incoming>Flow_1mvgxkr</bpmn:incoming>
@@ -55,7 +55,7 @@
       <bpmn:intermediateCatchEvent id="Event_0otvxxf" name="Wait for Inspection Response (JMS)">
         <bpmn:incoming>Flow_0xu3p2u</bpmn:incoming>
         <bpmn:outgoing>Flow_1m8ptx5</bpmn:outgoing>
-        <bpmn:messageEventDefinition id="MessageEventDefinition_04gp6uk" messageRef="Message_0ji1pm1" />
+        <bpmn:messageEventDefinition id="MessageEventDefinition_04gp6uk" messageRef="Message_3dp79qq" />
       </bpmn:intermediateCatchEvent>
       <bpmn:exclusiveGateway id="Gateway_19kzw99" name="Violation?">
         <bpmn:incoming>Flow_1m8ptx5</bpmn:incoming>
@@ -79,10 +79,6 @@
       </bpmn:serviceTask>
       <bpmn:sequenceFlow id="Flow_1hg4q05" sourceRef="Event_0gqx8o3" targetRef="Activity_0ab4kf5" />
       <bpmn:sequenceFlow id="Flow_0xu3p2u" sourceRef="Activity_0ab4kf5" targetRef="Event_0otvxxf" />
-      <bpmn:task id="Activity_0p4a4og" name="Assign Violation Committee">
-        <bpmn:incoming>Flow_01e3jx3</bpmn:incoming>
-        <bpmn:outgoing>Flow_1ozo1k9</bpmn:outgoing>
-      </bpmn:task>
       <bpmn:sequenceFlow id="Flow_01e3jx3" name="True" sourceRef="Gateway_19kzw99" targetRef="Activity_0p4a4og">
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=violation = true</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
@@ -92,15 +88,7 @@
         <bpmn:outgoing>Flow_1qnavtj</bpmn:outgoing>
       </bpmn:parallelGateway>
       <bpmn:sequenceFlow id="Flow_1ozo1k9" sourceRef="Activity_0p4a4og" targetRef="Gateway_19x92bl" />
-      <bpmn:task id="Activity_1u1xiuj" name="Legal Review">
-        <bpmn:incoming>Flow_0hlhac4</bpmn:incoming>
-        <bpmn:outgoing>Flow_0utydd5</bpmn:outgoing>
-      </bpmn:task>
       <bpmn:sequenceFlow id="Flow_0hlhac4" sourceRef="Gateway_19x92bl" targetRef="Activity_1u1xiuj" />
-      <bpmn:task id="Activity_0hk44id" name="Finance Review">
-        <bpmn:incoming>Flow_1qnavtj</bpmn:incoming>
-        <bpmn:outgoing>Flow_0xhdwev</bpmn:outgoing>
-      </bpmn:task>
       <bpmn:sequenceFlow id="Flow_1qnavtj" sourceRef="Gateway_19x92bl" targetRef="Activity_0hk44id" />
       <bpmn:parallelGateway id="Gateway_06yqtsq">
         <bpmn:incoming>Flow_0utydd5</bpmn:incoming>
@@ -135,6 +123,29 @@
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_1smyns7" sourceRef="Activity_1asj8wg" targetRef="Activity_0wv68pa" />
       <bpmn:sequenceFlow id="Flow_03kb9f4" sourceRef="Activity_0wv68pa" targetRef="Event_0p8pfmf" />
+      <bpmn:serviceTask id="Activity_0p4a4og" name="Assign Violation Committee">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="assign-committee" retries="" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_01e3jx3</bpmn:incoming>
+        <bpmn:outgoing>Flow_1ozo1k9</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:userTask id="Activity_1u1xiuj" name="Legal Review">
+        <bpmn:extensionElements>
+          <zeebe:userTask />
+          <zeebe:formDefinition formId="LegalDecision" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_0hlhac4</bpmn:incoming>
+        <bpmn:outgoing>Flow_0utydd5</bpmn:outgoing>
+      </bpmn:userTask>
+      <bpmn:userTask id="Activity_0hk44id" name="Finance Review">
+        <bpmn:extensionElements>
+          <zeebe:userTask />
+          <zeebe:formDefinition formId="FinanceDecision" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_1qnavtj</bpmn:incoming>
+        <bpmn:outgoing>Flow_0xhdwev</bpmn:outgoing>
+      </bpmn:userTask>
     </bpmn:subProcess>
     <bpmn:sequenceFlow id="Flow_0iv4mbd" name="Raise inspection" sourceRef="validatorAction" targetRef="subprocess_inspection">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=validatorAction = "raiseInspection"</bpmn:conditionExpression>
@@ -242,7 +253,7 @@
       <bpmn:outgoing>Flow_0i776w2</bpmn:outgoing>
     </bpmn:userTask>
   </bpmn:process>
-  <bpmn:message id="Message_0ji1pm1" name="InspectionResponseMsg">
+  <bpmn:message id="Message_0ji1pm1" name="inspectionResponseinspectionResponse">
     <bpmn:extensionElements>
       <zeebe:subscription correlationKey="=inspectionCorrelationKey" />
     </bpmn:extensionElements>
@@ -253,6 +264,11 @@
     </bpmn:extensionElements>
   </bpmn:message>
   <bpmn:message id="Message_1uvtjk3" name="Message_registration" />
+  <bpmn:message id="Message_3dp79qq" name="inspectionResponse">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=requestId" />
+    </bpmn:extensionElements>
+  </bpmn:message>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="registration_process">
       <bpmndi:BPMNShape id="Gateway_1wf9dxq_di" bpmnElement="gw_missingWage" isMarkerVisible="true">
@@ -278,21 +294,6 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="676" y="683" width="59" height="14" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0sl5tqc_di" bpmnElement="start_registration">
-        <dc:Bounds x="182" y="162" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="158" y="205" width="85" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_04ad3r4_di" bpmnElement="task_admin">
-        <dc:Bounds x="530" y="140" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0tbad1u_di" bpmnElement="task_validator">
-        <dc:Bounds x="530" y="330" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_13l6ut0_di" bpmnElement="task_financialController">
-        <dc:Bounds x="720" y="790" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1a6e3cx_di" bpmnElement="subprocess_inspection">
         <dc:Bounds x="950" y="540" width="100" height="80" />
@@ -325,6 +326,21 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0e1i00y_di" bpmnElement="Event_0e1i00y">
         <dc:Bounds x="882" y="1032" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0sl5tqc_di" bpmnElement="start_registration">
+        <dc:Bounds x="182" y="162" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="158" y="205" width="85" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_04ad3r4_di" bpmnElement="task_admin">
+        <dc:Bounds x="530" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0tbad1u_di" bpmnElement="task_validator">
+        <dc:Bounds x="530" y="330" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_13l6ut0_di" bpmnElement="task_financialController">
+        <dc:Bounds x="720" y="790" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0yuk0l8_di" bpmnElement="timer_admin">
         <dc:Bounds x="582" y="122" width="36" height="36" />
@@ -497,23 +513,11 @@
         <dc:Bounds x="240" y="100" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0p4a4og_di" bpmnElement="Activity_0p4a4og">
-        <dc:Bounds x="610" y="210" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_19x92bl_di" bpmnElement="Gateway_19x92bl">
         <dc:Bounds x="775" y="225" width="50" height="50" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="772" y="175" width="56" height="40" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1u1xiuj_di" bpmnElement="Activity_1u1xiuj">
-        <dc:Bounds x="890" y="210" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0hk44id_di" bpmnElement="Activity_0hk44id">
-        <dc:Bounds x="890" y="320" width="100" height="80" />
-        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_06yqtsq_di" bpmnElement="Gateway_06yqtsq">
         <dc:Bounds x="1055" y="225" width="50" height="50" />
@@ -531,6 +535,15 @@
       <bpmndi:BPMNShape id="Activity_1asj8wg_di" bpmnElement="Activity_1asj8wg">
         <dc:Bounds x="1300" y="320" width="100" height="80" />
         <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1fwsjdf_di" bpmnElement="Activity_0p4a4og">
+        <dc:Bounds x="610" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1lfxkm8_di" bpmnElement="Activity_1u1xiuj">
+        <dc:Bounds x="890" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1icwbiu_di" bpmnElement="Activity_0hk44id">
+        <dc:Bounds x="890" y="320" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_1m8ptx5_di" bpmnElement="Flow_1m8ptx5">
         <di:waypoint x="438" y="140" />

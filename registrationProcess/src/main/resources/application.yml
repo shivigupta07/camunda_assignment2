@@ -4,7 +4,8 @@ camunda:
     taskapi:
         url: http://localhost:8082/v1/tasks/
     identity:
-        token-url: http://localhost:18080/auth/realms/camunda-platform/protocol/openid-connect/token
+        token-url: http://localhost:18080/auth
+        realm: camunda-platform
         client-id: employee-travel-allowance
         client-secret: ocRlpPwbp2qyG2sSN9JgrEMnzpPJNFwr
  
