@@ -29,12 +29,11 @@ public class ActivateRegistrationWorker {
     public void subscribeWorker() {
         zeebeClient
                 .newWorker()
-                .jobType("activate-registration")   // 👈 BPMN service task job type
+                .jobType("activate-registration")   //BPMN service task job type
                 .handler(new JobHandler() {
                     @Override
                     public void handle(JobClient client, ActivatedJob job) {
                         try {
-                            // Process variables from BPMN
                             Map<String, Object> variables = job.getVariablesAsMap();
 
                             String requestId = (String) variables.get("requestId");
@@ -43,7 +42,7 @@ public class ActivateRegistrationWorker {
                             String date = (String) variables.get("date");
                             String indicator = (String) variables.get("indicator");
 
-                            // Prepare API request body
+                            // API request body
                             Map<String, Object> requestBody = Map.of(
                                     "requestId", requestId,
                                     "applicantName", applicantName,
@@ -53,7 +52,7 @@ public class ActivateRegistrationWorker {
                             );
 
                             // REST API call
-                            String apiUrl = "http://localhost:8080/api/registration/activate"; // 👈 tumhara API endpoint
+                            String apiUrl = "http://localhost:8080/api/registration/activate";
                             HttpHeaders headers = new HttpHeaders();
                             headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -62,7 +61,7 @@ public class ActivateRegistrationWorker {
                             ResponseEntity<String> response =
                                     restTemplate.postForEntity(apiUrl, request, String.class);
 
-                            // Complete job with response
+                            
                             client.newCompleteCommand(job.getKey())
                                     .variables(Map.of("apiResponse", response.getBody(), "status", "success"))
                                     .send()
@@ -71,7 +70,6 @@ public class ActivateRegistrationWorker {
                             System.out.println("Registration activated for: " + applicantName);
 
                         } catch (Exception e) {
-                            // Handle failure → BPMN boundary error ya retry
                             client.newFailCommand(job.getKey())
                                     .retries(job.getRetries() - 1)
                                     .errorMessage(e.getMessage())

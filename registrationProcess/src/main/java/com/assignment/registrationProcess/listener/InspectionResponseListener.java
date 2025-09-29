@@ -27,14 +27,12 @@ public class InspectionResponseListener {
         System.out.println("Got response: " + msg);
 
         try {
-            // Parse JSON message
             JsonNode jsonNode = objectMapper.readTree(msg);
             String requestId = jsonNode.get("requestId").asText();
             boolean violation = jsonNode.get("violation").asBoolean();
             System.out.println("Parsed inspectionId (correlation key): " + requestId);
             System.out.println("Parsed violation: " + violation);
 
-            // Publish message to Zeebe BPMN
             zeebeClient.newPublishMessageCommand()
                 .messageName("inspectionResponse")   // BPMN message name
                 .correlationKey(requestId)         // BPMN correlation key

@@ -1,13 +1,13 @@
 camunda:
   operate:
     url: http://localhost:8081
-    taskapi:
-        url: http://localhost:8082/v1/tasks/
-    identity:
-        token-url: http://localhost:18080/auth
-        realm: camunda-platform
-        client-id: employee-travel-allowance
-        client-secret: ocRlpPwbp2qyG2sSN9JgrEMnzpPJNFwr
+  tasklist:
+    url: http://localhost:8082
+  identity:
+    token-url: http://localhost:18080/auth
+    realm: camunda-platform
+    client-id: employee-travel-allowance
+    client-secret: ocRlpPwbp2qyG2sSN9JgrEMnzpPJNFwr
  
 logging:
   level:

@@ -45,26 +45,22 @@ public class SendInspectionRequestWorker {
         try {
             Map<String, Object> vars = job.getVariablesAsMap();
 
-            // Extract variables from Zeebe job
-            String requestId = (String) vars.get("requestId");  // make sure workflow variable is "requestId"
+            String requestId = (String) vars.get("requestId");
             String customerEmail = (String) vars.get("customerEmail");
 
             if (requestId == null) requestId = "UNKNOWN";
             if (customerEmail == null) customerEmail = "UNKNOWN";
 
-            // Create JSON payload
             Map<String, Object> payload = new HashMap<>();
             payload.put("requestId", requestId);
             payload.put("customerEmail", customerEmail);
 
             String jsonMessage = objectMapper.writeValueAsString(payload);
 
-            // Send JSON message to JMS queue
             jmsTemplate.convertAndSend(requestQueue, jsonMessage);
 
             System.out.println("JMS Message sent: " + jsonMessage);
 
-            // Complete the Zeebe job
             client.newCompleteCommand(job.getKey()).send().join();
 
         } catch (Exception e) {

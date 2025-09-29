@@ -1,0 +1,91 @@
+{
+  "components": [
+    {
+      "label": "Legal Decison",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_00iq00q",
+        "columns": null
+      },
+      "id": "Field_1e24k22",
+      "key": "legalDecision",
+      "readonly": true
+    },
+    {
+      "label": "Legal Comment",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_1b9uszm",
+        "columns": null
+      },
+      "id": "Field_1753m46",
+      "key": "LegalComment",
+      "readonly": true
+    },
+    {
+      "label": "Finance Decision",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_068oeq8",
+        "columns": null
+      },
+      "id": "Field_15dugdm",
+      "key": "financeDecision",
+      "readonly": true
+    },
+    {
+      "label": "Finance Comment",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_1fyb2r2",
+        "columns": null
+      },
+      "id": "Field_07h75eh",
+      "key": "FinanceComment",
+      "readonly": true
+    },
+    {
+      "label": "Decision",
+      "values": [
+        {
+          "label": "Class 1",
+          "value": "Class 1"
+        },
+        {
+          "label": "Class 2",
+          "value": "Class 2"
+        },
+        {
+          "label": "Class 3",
+          "value": "Class 3"
+        }
+      ],
+      "type": "radio",
+      "layout": {
+        "row": "Row_1bzfkkb",
+        "columns": null
+      },
+      "id": "Field_16zofee",
+      "key": "headDecision"
+    },
+    {
+      "label": "Head Comment",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_1bzfkkb",
+        "columns": null
+      },
+      "id": "Field_1tawnpt",
+      "key": "HeadComment"
+    }
+  ],
+  "type": "default",
+  "id": "Head_Decision",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.7.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.39.0"
+  },
+  "schemaVersion": 19
+}

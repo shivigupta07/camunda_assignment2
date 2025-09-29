@@ -16,56 +16,58 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class AssignCommitteeWorker {
 
-    private static String lastCommittee = "C2"; // round-robin starting point
+    
+    private static int committeeIndex = 0;
     private static final Map<String, Integer> memberIndexes = new ConcurrentHashMap<>();
 
-    @Value("${camunda.operate.identity.token-url}")
+    @Value("${camunda.identity.token-url}")
     private String serverUrl;
 
-    @Value("${camunda.operate.identity.realm}")
+    @Value("${camunda.identity.realm}")
     private String realm;
-
-    @Value("${camunda.operate.identity.client-id}")
-    private String clientId;
-
-    @Value("${camunda.operate.identity.client-secret}")
-    private String clientSecret;
 
     private final WebClient webClient = WebClient.create();
 
     private static final List<String> COMMITTEES = Arrays.asList("C1", "C2");
-    private static final List<String> GROUPS = Arrays.asList("Finance", "Head", "Legal");
 
     @JobWorker(type = "assign-committee")
     public void handle(JobClient client, ActivatedJob job) {
         try {
-            // 1️⃣ Select committee round-robin
-            String selectedCommittee = "C1".equals(lastCommittee) ? "C2" : "C1";
-            lastCommittee = selectedCommittee;
+            String selectedCommittee = COMMITTEES.get(committeeIndex % COMMITTEES.size());
+            committeeIndex++;
             System.out.println("Selected Committee: " + selectedCommittee);
 
-            // 2️⃣ Generate fresh token using client credentials
             String token = getAccessToken();
 
-            // 3️⃣ Pick one member from Finance, Head, Legal groups (round-robin)
-            String financeMember = pickMemberFromGroup("Finance", token);
-            String headMember = pickMemberFromGroup("Head", token);
-            String legalMember = pickMemberFromGroup("Legal", token);
+            String committeeGroupId = getGroupId(selectedCommittee, token);
+            if (committeeGroupId == null) {
+                throw new RuntimeException("Committee group not found: " + selectedCommittee);
+            }
 
-            // 4️⃣ Complete job with 4 variables
+            List<Map<String, Object>> childrenGroups = getChildrenGroups(committeeGroupId, token);
+
+            Map<String, String> selectedMembers = new HashMap<>();
+            for (Map<String, Object> child : childrenGroups) {
+                String groupName = (String) child.get("name");
+                String groupId = (String) child.get("id");
+
+                String member = pickMemberFromGroup(groupName, groupId, token);
+                if (member == null) {
+                    member = "NO_MEMBER_FOUND";
+                }
+
+                selectedMembers.put(groupName, member);
+                System.out.println(groupName + " Member: " + member);
+            }
+
+            Map<String, Object> vars = new HashMap<>();
+            vars.put("selectedCommittee", selectedCommittee);
+            vars.putAll(selectedMembers);
+
             client.newCompleteCommand(job.getKey())
-                    .variables(Map.of(
-                            "selectedCommittee", selectedCommittee,
-                            "financeMember", financeMember,
-                            "headMember", headMember,
-                            "legalMember", legalMember
-                    ))
+                    .variables(vars)
                     .send()
                     .join();
-
-            System.out.println("Finance Member: " + financeMember);
-            System.out.println("Head Member: " + headMember);
-            System.out.println("Legal Member: " + legalMember);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,20 +94,6 @@ public class AssignCommitteeWorker {
         return (String) result.get("access_token");
     }
 
-
-    private String pickMemberFromGroup(String groupName, String token) {
-        String groupId = getGroupId(groupName, token);
-        if (groupId == null) return null;
-
-        List<String> members = getMembers(groupId, token);
-        if (members.isEmpty()) return null;
-
-        int idx = memberIndexes.getOrDefault(groupName, 0);
-        String member = members.get(idx % members.size());
-        memberIndexes.put(groupName, (idx + 1) % members.size());
-        return member;
-    }
-
     private String getGroupId(String groupName, String token) {
         List<Map<String, Object>> groups = getGroups(token);
         return groups.stream()
@@ -127,6 +115,37 @@ public class AssignCommitteeWorker {
         return response.block();
     }
 
+    private List<Map<String, Object>> getChildrenGroups(String parentGroupId, String token) {
+        String url = serverUrl + "/admin/realms/" + realm + "/groups/" + parentGroupId + "/children";
+
+        Mono<List<Map<String, Object>>> response = webClient.get()
+                .uri(url)
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {});
+
+        return response.block();
+    }
+
+    private String pickMemberFromGroup(String groupName, String groupId, String token) {
+        List<String> members = getMembers(groupId, token);
+
+        if (members.isEmpty()) return null;
+
+        int lastIndex = memberIndexes.getOrDefault(groupId, -1);
+
+        int nextIndex = (lastIndex + 1) % members.size();
+
+        String selectedMember = members.get(nextIndex);
+
+        memberIndexes.put(groupId, nextIndex);
+
+        System.out.println("Group: " + groupName + " | Members: " + members + " | Selected: " + selectedMember + " | Next Index: " + nextIndex);
+
+        return selectedMember;
+    }
+
+
     private List<String> getMembers(String groupId, String token) {
         String url = serverUrl + "/admin/realms/" + realm + "/groups/" + groupId + "/members";
 
@@ -137,6 +156,8 @@ public class AssignCommitteeWorker {
                 .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {});
 
         List<Map<String, Object>> memberList = response.block();
+        if (memberList == null) return Collections.emptyList();
+
         return memberList.stream().map(m -> (String) m.get("username")).toList();
     }
 }

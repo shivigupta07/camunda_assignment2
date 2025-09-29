@@ -18,13 +18,12 @@ public class RegistrationController {
         this.zeebeClient = zeebeClient;
     }
 
-    // Start a new BPMN process
     @PostMapping("/start-process")
     public String startProcess(@RequestBody Map<String, Object> variables) {
         try {
             zeebeClient
                 .newCreateInstanceCommand()
-                .bpmnProcessId("registration_process") // Replace with your actual BPMN process ID
+                .bpmnProcessId("registration_process")
                 .latestVersion()
                 .variables(variables)
                 .send()
@@ -35,8 +34,7 @@ public class RegistrationController {
             return "Failed to start process: " + e.getMessage();
         }
     }
-    
-    // Mock API for Activate Registration (Worker will call this)
+
     @PostMapping("/registration/activate")
     public ResponseEntity<Map<String, Object>> activateRegistration(@RequestBody Map<String, Object> request) {
         System.out.println("Activate Registration API called with: " + request);
