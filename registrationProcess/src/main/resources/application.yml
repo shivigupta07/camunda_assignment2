@@ -26,6 +26,7 @@ app:
   jms: 
     request-queue: inspectionQueue
     response-queue: inspectionResponseQueue
+    registration-queue: registrationQueue
 
 zeebe:
   client:
